@@ -107,7 +107,7 @@ void Astar::drawGrid(Node* startNode)
 					tileColor = GRAY;
 					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, tileColor);
 					
-				
+
 				}
 				else
 				{
@@ -199,7 +199,7 @@ void Astar::drawGrid(Node* startNode)
 
 			}
 
-			//cout << gridNodes.at(vectorIndex)->gridX << "  " << gridNodes.at(vectorIndex)->gridY << "  " << gridNodes.at(vectorIndex)->isWalkable << endl;
+			
 			vectorIndex++;
 
 		}
@@ -207,6 +207,7 @@ void Astar::drawGrid(Node* startNode)
 	
 
 	}
+	
 
 }
 
@@ -230,9 +231,7 @@ void Astar::FindPath(Node* startNode, Node* targetNode)
 			if (fCost(openSet.at(i)) < fCost(currentNode) || fCost(openSet.at(i)) == fCost(currentNode) && openSet.at(i)->hCost < currentNode->hCost)
 			{
 				currentNode = openSet.at(i);
-				cout << "currentNode x = " << currentNode->gridX << " currentNode y = " << currentNode->gridY << " fCost = " << fCost(currentNode) << endl;
-				cout << "i = " << i << " openSet.at(i)->gridX = " << openSet.at(i)->gridX << " openSet.at(i)->gridY = " << openSet.at(i)->gridY << " fCost = " << fCost(openSet.at(i)) << endl;
-				//WaitTime(3);
+
 			}
 		}
 
@@ -242,9 +241,7 @@ void Astar::FindPath(Node* startNode, Node* targetNode)
 
 		if (currentNode == targetNode)
 		{
-			
-			cout << "targetNode equals currentNode  "<< openSet.size() << endl;
-			
+		
 			RetracePath(startNode, targetNode);
 
 			pathFound = true;
@@ -256,8 +253,6 @@ void Astar::FindPath(Node* startNode, Node* targetNode)
 
 		for (Node* neighbour : GetNeighbours(currentNode))
 		{
-			
-			cout << "Closed Set Size = " << closedSet.size() << endl;
 
 			if (!neighbour->isWalkable || find(closedSet.begin(), closedSet.end(), neighbour) != closedSet.end())
 				continue;
@@ -270,15 +265,11 @@ void Astar::FindPath(Node* startNode, Node* targetNode)
 				neighbour->hCost = GetDistance(targetNode, neighbour);
 				neighbour->parent = currentNode;
 
-				cout << "currentNode gCost = " << currentNode->gCost << " GetDistance(currentNode, neighbour) = " << GetDistance(currentNode, neighbour) <<endl;
-				cout << "gCost = " << neighbour->gCost << " " << "hCost = " << neighbour->hCost << " x = " << neighbour->gridX << " y = " << neighbour->gridY << endl;
-
 				
 				if (!(find(openSet.begin(), openSet.end(), neighbour) != openSet.end()))
 					openSet.push_back(neighbour);
-				/*else
-					openSet.swap();*/
-
+				//Need to add condition if neighbour is already in the openSet
+				//Have to update the content of that element with the new neighbour
 			}
 
 		}
@@ -297,8 +288,7 @@ void Astar::RetracePath(Node* startNode, Node* endNode)
 		path.push_back(currentNode);
 		currentNode = currentNode->parent;
 
-		cout  << "gCost = " << currentNode->gCost << " " << "hCost = " << currentNode->hCost << " x = " << currentNode->gridX << " y = " << currentNode->gridY << endl;
-
+		
 	}
 	reverse(path.begin(), path.end());
 
@@ -332,7 +322,7 @@ vector<Node*> Astar::GetNeighbours(Node* currentNode)
 			int checkX = currentNode->gridX + x;
 			int checkY = currentNode->gridY + y;
 
-			if (checkX >= 0 && checkX < GRID_COLS && checkY >= 0 && checkY < GRID_ROWS)
+			if (checkX >= 0 && checkX < GRID_ROWS && checkY >= 0 && checkY < GRID_COLS)
 			{
 				neighbours.push_back(findNode(checkX, checkY));
 			}

@@ -30,9 +30,6 @@ int main()
     InitWindow(screenWidth, screenHeight, "Pathfinding!");
     SetTargetFPS(60);
 
-   
-    //startNode = targetNode;
-
     while (WindowShouldClose() == false) {
         BeginDrawing();
         ClearBackground(White);
@@ -55,10 +52,7 @@ int main()
 
             if(startNode->isWalkable == true)
                 startNode->isStartNode = true;
-            
-
-            cout << startNode->gridX << " " << startNode->gridY << endl;
-
+        
             path->path.clear();
 
         }
@@ -79,8 +73,6 @@ int main()
 
 
             path->pathFound = false;
-
-            cout << targetNode->gridX << " " << targetNode->gridY << endl;
 
         }
         EndDrawing();
