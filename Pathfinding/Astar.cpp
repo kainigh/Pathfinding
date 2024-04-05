@@ -262,7 +262,7 @@ void Astar::FindPath(Node* startNode, Node* targetNode)
 			if (!neighbour->isWalkable || find(closedSet.begin(), closedSet.end(), neighbour) != closedSet.end())
 				continue;
 
-			int newMovementCost = currentNode->gCost + GetDistance(currentNode, neighbour);
+			int newMovementCost = currentNode->gCost + GetDistance(currentNode, neighbour) * neighbour->weight;
 
 			if (newMovementCost < neighbour->gCost || !(find(openSet.begin(), openSet.end(), neighbour) != openSet.end()))
 			{
@@ -276,6 +276,8 @@ void Astar::FindPath(Node* startNode, Node* targetNode)
 				
 				if (!(find(openSet.begin(), openSet.end(), neighbour) != openSet.end()))
 					openSet.push_back(neighbour);
+				/*else
+					openSet.swap();*/
 
 			}
 
