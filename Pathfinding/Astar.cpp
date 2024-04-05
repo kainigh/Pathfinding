@@ -8,7 +8,7 @@ using namespace std;
 
 Astar::Astar()
 {
-	for (int i = 0; i < TRACK_COLS * TRACK_ROWS; i++)
+	for (int i = 0; i < GRID_COLS * GRID_ROWS; i++)
 	{
 		Node* node = new Node;
 
@@ -20,24 +20,24 @@ Astar::Astar()
 
 }
 
-int Astar::isBrickAtTileCoord(int trackTileCol, int trackTileRow) {
-	int	trackIndex = trackTileCol + TRACK_COLS * trackTileRow;
+int Astar::isBrickAtTileCoord(int gridTileCol, int gridTileRow) {
+	int	gridIndex = gridTileCol + GRID_COLS * gridTileRow;
 
 	
 
-	if (grid[trackIndex] == -1)
+	if (grid[gridIndex] == -1)
 		return -1;
 
-	if (grid[trackIndex] == 0)
+	if (grid[gridIndex] == 0)
 		return 0;
 
-	if (grid[trackIndex] == 1)
+	if (grid[gridIndex] == 1)
 		return 1;
 
-	if (grid[trackIndex] == 2)
+	if (grid[gridIndex] == 2)
 		return 2;
 
-	if (grid[trackIndex] == 3)
+	if (grid[gridIndex] == 3)
 	{
 		
 		return 3;
@@ -48,29 +48,21 @@ int Astar::isBrickAtTileCoord(int trackTileCol, int trackTileRow) {
 }
 
 
-void Astar::drawTrack(Node* startNode)
+void Astar::drawGrid(Node* startNode)
 {
 	int vectorIndex = 0;
 
-	
-	/*gridNodes.at(0)->isStartNode = true;
-	gridNodes.at(299)->isTargetNode = true;*/
-	
-
-	for (int eachCol = 0; eachCol < TRACK_COLS; eachCol++)
+	for (int eachCol = 0; eachCol < GRID_COLS; eachCol++)
 	{
-		for (int eachRow = 0; eachRow < TRACK_ROWS; eachRow++)
+		for (int eachRow = 0; eachRow < GRID_ROWS; eachRow++)
 		{
 			
-
 			if (isBrickAtTileCoord(eachCol, eachRow) == -1)
 			{
-				int	brickLeftEdgeX = eachCol * TRACK_W;
-				int	brickTopEdgeY = eachRow * TRACK_H;
+				int	brickLeftEdgeX = eachCol * GRID_W;
+				int	brickTopEdgeY = eachRow * GRID_H;
 
-			
-
-				DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, Color{ 60, 120, 30, 255 });
+				DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, Color{ 60, 120, 30, 255 });
 
 				gridNodes.at(vectorIndex)->gridX = eachRow;
 				gridNodes.at(vectorIndex)->gridY = eachCol;
@@ -81,10 +73,10 @@ void Astar::drawTrack(Node* startNode)
 
 			if (isBrickAtTileCoord(eachCol, eachRow) == 0)
 			{
-				int	brickLeftEdgeX = eachCol * TRACK_W;
-				int	brickTopEdgeY = eachRow * TRACK_H;
+				int	brickLeftEdgeX = eachCol * GRID_W;
+				int	brickTopEdgeY = eachRow * GRID_H;
 
-				DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, Color{ 110, 160, 225, 255 });
+				DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, Color{ 110, 160, 225, 255 });
 
 				gridNodes.at(vectorIndex)->gridX = eachRow;
 				gridNodes.at(vectorIndex)->gridY = eachCol;
@@ -95,32 +87,32 @@ void Astar::drawTrack(Node* startNode)
 
 			if (isBrickAtTileCoord(eachCol, eachRow) == 1)
 			{
-				int	brickLeftEdgeX = eachCol * TRACK_W;
-				int	brickTopEdgeY = eachRow * TRACK_H;
+				int	brickLeftEdgeX = eachCol * GRID_W;
+				int	brickTopEdgeY = eachRow * GRID_H;
 
 				
 				if (gridNodes.at(vectorIndex)->isStartNode == true)
 				{
 					tileColor = DARKBLUE;
-					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, tileColor);
+					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, tileColor);
 				}
 				else if (gridNodes.at(vectorIndex)->isTargetNode == true)
 				{
 					tileColor = MAROON;
-					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, tileColor);
+					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, tileColor);
 				}
 				else if (!path.empty() && (find(path.begin(), path.end(), gridNodes.at(vectorIndex)) != path.end()))
 				{
 					
 					tileColor = GRAY;
-					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, tileColor);
+					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, tileColor);
 					
 				
 				}
 				else
 				{
 					tileColor = GREEN;
-					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, tileColor);  //Color{ 150, 200, 125, 255 }
+					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, tileColor);  //Color{ 150, 200, 125, 255 }
 
 				}
 
@@ -128,81 +120,82 @@ void Astar::drawTrack(Node* startNode)
 				gridNodes.at(vectorIndex)->gridX = eachRow;
 				gridNodes.at(vectorIndex)->gridY = eachCol;
 				gridNodes.at(vectorIndex)->isWalkable = true;
+				gridNodes.at(vectorIndex)->weight = 1;
 
 			}
 
 			if (isBrickAtTileCoord(eachCol, eachRow) == 2)
 			{
-				int	brickLeftEdgeX = eachCol * TRACK_W;
-				int	brickTopEdgeY = eachRow * TRACK_H;
+				int	brickLeftEdgeX = eachCol * GRID_W;
+				int	brickTopEdgeY = eachRow * GRID_H;
 
 				if (gridNodes.at(vectorIndex)->isStartNode == true)
 				{
 					tileColor = DARKBLUE;
-					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, tileColor);
+					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, tileColor);
 				}
 				else if (gridNodes.at(vectorIndex)->isTargetNode == true)
 				{
 					tileColor = MAROON;
-					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, tileColor);
+					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, tileColor);
 				}
 				else if (!path.empty() && (find(path.begin(), path.end(), gridNodes.at(vectorIndex)) != path.end()))
 				{
 					
 					tileColor = GRAY;
-					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, tileColor);
+					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, tileColor);
 					
 				}
 				else
 				{
-					tileColor = Color{ 200, 150, 0, 255 };
-					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, tileColor);  //Color{ 150, 200, 125, 255 }
+					tileColor = Color{ 200, 150, 0, 255 }; //Light Brown Bridge
+					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, tileColor); 
 
 				}
 
 				gridNodes.at(vectorIndex)->gridX = eachRow;
 				gridNodes.at(vectorIndex)->gridY = eachCol;
 				gridNodes.at(vectorIndex)->isWalkable = true;
+				gridNodes.at(vectorIndex)->weight = 2;
 
 
 			}
 
 			if (isBrickAtTileCoord(eachCol, eachRow) == 3)
 			{
-				int	brickLeftEdgeX = eachCol * TRACK_W;
-				int	brickTopEdgeY = eachRow * TRACK_H;
+				int	brickLeftEdgeX = eachCol * GRID_W;
+				int	brickTopEdgeY = eachRow * GRID_H;
 
 				if (gridNodes.at(vectorIndex)->isStartNode == true)
 				{
 					tileColor = DARKBLUE;
-					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, tileColor);
+					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, tileColor);
 				}
 				else if (gridNodes.at(vectorIndex)->isTargetNode == true)
 				{
 					tileColor = MAROON;
-					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, tileColor);
+					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, tileColor);
 				}
 				else if (!path.empty() && (find(path.begin(), path.end(), gridNodes.at(vectorIndex)) != path.end()))
 				{
 					
 					tileColor = GRAY;
-					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, tileColor);
+					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, tileColor);
 					
 
 				}
 				else
 				{
-					tileColor = Color{ 130, 100, 0, 255 };
-					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, tileColor);  //Color{ 150, 200, 125, 255 }
+					tileColor = Color{ 130, 100, 0, 255 }; //Dark Brown Bridge
+					DrawRectangle(brickLeftEdgeX, brickTopEdgeY, GRID_W - BRICK_GAP, GRID_H - BRICK_GAP, tileColor);  
 
 				}
 
-				//DrawRectangle(brickLeftEdgeX, brickTopEdgeY, TRACK_W - BRICK_GAP, TRACK_H - BRICK_GAP, Color{ 130, 100, 0, 255 });
 
 				gridNodes.at(vectorIndex)->gridX = eachRow;
 				gridNodes.at(vectorIndex)->gridY = eachCol;
 				gridNodes.at(vectorIndex)->isWalkable = true;
-
+				gridNodes.at(vectorIndex)->weight = 1.5;
 
 			}
 
@@ -222,8 +215,6 @@ void Astar::FindPath(Node* startNode, Node* targetNode)
 	
 	vector<Node*> openSet;
 	vector<Node*> closedSet;
-	//Node* neighbour;
-
 
 	openSet.push_back(startNode);
 
@@ -232,47 +223,41 @@ void Astar::FindPath(Node* startNode, Node* targetNode)
 	while (!openSet.empty())
 	{
 		Node* currentNode = openSet.at(0);
-		
+		int i;
 
-		/*for (int i = 1; i < openSet.size(); i++)
-		{
-			if (openSet.at(i)->fCost < currentNode->fCost || openSet.at(i)->fCost == currentNode->fCost && openSet.at(i)->hCost < currentNode->hCost)
-			{
-				currentNode = openSet.at(i);
-			}
-
-		}*/
-
-		for (int i = 1; i < openSet.size(); i++)
+		for (i = 1; i < openSet.size(); i++)
 		{
 			if (fCost(openSet.at(i)) < fCost(currentNode) || fCost(openSet.at(i)) == fCost(currentNode) && openSet.at(i)->hCost < currentNode->hCost)
 			{
 				currentNode = openSet.at(i);
+				cout << "currentNode x = " << currentNode->gridX << " currentNode y = " << currentNode->gridY << " fCost = " << fCost(currentNode) << endl;
+				cout << "i = " << i << " openSet.at(i)->gridX = " << openSet.at(i)->gridX << " openSet.at(i)->gridY = " << openSet.at(i)->gridY << " fCost = " << fCost(openSet.at(i)) << endl;
+				//WaitTime(3);
 			}
 		}
 
 
-		openSet.pop_back();
+		openSet.erase(find(openSet.begin(), openSet.end(), currentNode));
 		closedSet.push_back(currentNode);
 
 		if (currentNode == targetNode)
 		{
-			//openSet.clear();
+			
 			cout << "targetNode equals currentNode  "<< openSet.size() << endl;
 			
-			RetractPath(startNode, targetNode);
+			RetracePath(startNode, targetNode);
 
 			pathFound = true;
 
-			//path.clear();
-
 			return;
+
 		}
 		
 
 		for (Node* neighbour : GetNeighbours(currentNode))
 		{
 			
+			cout << "Closed Set Size = " << closedSet.size() << endl;
 
 			if (!neighbour->isWalkable || find(closedSet.begin(), closedSet.end(), neighbour) != closedSet.end())
 				continue;
@@ -282,48 +267,26 @@ void Astar::FindPath(Node* startNode, Node* targetNode)
 			if (newMovementCost < neighbour->gCost || !(find(openSet.begin(), openSet.end(), neighbour) != openSet.end()))
 			{
 				neighbour->gCost = newMovementCost;
-				neighbour->hCost = GetDistance(neighbour, targetNode);
+				neighbour->hCost = GetDistance(targetNode, neighbour);
 				neighbour->parent = currentNode;
 
-				cout << neighbour->gCost << " " << neighbour->hCost << endl;
+				cout << "currentNode gCost = " << currentNode->gCost << " GetDistance(currentNode, neighbour) = " << GetDistance(currentNode, neighbour) <<endl;
+				cout << "gCost = " << neighbour->gCost << " " << "hCost = " << neighbour->hCost << " x = " << neighbour->gridX << " y = " << neighbour->gridY << endl;
 
-				WaitTime(.06);
-
+				
 				if (!(find(openSet.begin(), openSet.end(), neighbour) != openSet.end()))
 					openSet.push_back(neighbour);
 
 			}
 
 		}
-
-
-			/*if (Neighbours.at(i)->fCost < currentNode->fCost)
-				currentNode = Neighbours.at(i);
-
-			if (newMovementCost < Neighbours.at(i)->gCost || !(find(openSet.begin(), openSet.end(), Neighbours.at(i)) != openSet.end()))
-			{
-				Neighbours.at(i)->gCost = newMovementCost;
-				Neighbours.at(i)->hCost = GetDistance(Neighbours.at(i), targetNode);
-				Neighbours.at(i)->parent = currentNode;
-
-				if (!(find(openSet.begin(), openSet.end(), Neighbours.at(i)) != openSet.end()))
-					openSet.push_back(Neighbours.at(i));
-
-			}*/
-
 		
-		
-
 	}
-
-
 
 }
 
-void Astar::RetractPath(Node* startNode, Node* endNode)
+void Astar::RetracePath(Node* startNode, Node* endNode)
 {
-	
-
 	
 	Node* currentNode = endNode;
 
@@ -332,30 +295,24 @@ void Astar::RetractPath(Node* startNode, Node* endNode)
 		path.push_back(currentNode);
 		currentNode = currentNode->parent;
 
-		cout << currentNode->gridX << "  " << currentNode->gridY << endl;
+		cout  << "gCost = " << currentNode->gCost << " " << "hCost = " << currentNode->hCost << " x = " << currentNode->gridX << " y = " << currentNode->gridY << endl;
 
 	}
 	reverse(path.begin(), path.end());
 
-	/*for (int i = 0; i < path.size(); i++)
-	{
-		cout << path.at(i)->gridX << "  " << path.at(i)->gridY << endl;
-
-	}*/
-
 }
 
-int Astar::GetDistance(Node* nodeA, Node* nodeB)
+int Astar::GetDistance(Node* nodeA, Node* neighbour)
 {
 
 
-	int distX = abs(nodeA->gridX - nodeB->gridX);
-	int distY = abs(nodeA->gridY - nodeB->gridY);
+	int distX = abs(nodeA->gridX - neighbour->gridX);
+	int distY = abs(nodeA->gridY - neighbour->gridY);
 
 	if (distX > distY)
 		return 14 * distY + 10 * (distX - distY);
 
-	return 14 * distY + 10 * (distY - distX);
+	return 14 * distX + 10 * (distY - distX);
 
 }
 
@@ -373,7 +330,7 @@ vector<Node*> Astar::GetNeighbours(Node* currentNode)
 			int checkX = currentNode->gridX + x;
 			int checkY = currentNode->gridY + y;
 
-			if (checkX >= 0 && checkX < TRACK_COLS && checkY >= 0 && checkY < TRACK_ROWS)
+			if (checkX >= 0 && checkX < GRID_COLS && checkY >= 0 && checkY < GRID_ROWS)
 			{
 				neighbours.push_back(findNode(checkX, checkY));
 			}
@@ -383,45 +340,22 @@ vector<Node*> Astar::GetNeighbours(Node* currentNode)
 
 	return neighbours;
 
-	/*for (int i = 0; i < Neighbours.size(); i++)
-	{
-		int CNdx = abs(currentNode->gridX - Neighbours.at(i)->gridX);
-		int CNdy = abs(currentNode->gridY - Neighbours.at(i)->gridY);
-		int CNdist = floor(sqrt(CNdx + CNdy) * 10);
-
-		int TNdx = abs(targetNode->gridX - Neighbours.at(i)->gridX);
-		int TNdy = abs(targetNode->gridY - Neighbours.at(i)->gridY);
-		int TNdist = floor(sqrt(TNdx + TNdy) * 10);
-
-
-		Neighbours.at(i)->gCost = CNdist;
-		Neighbours.at(i)->hCost = TNdist;
-		Neighbours.at(i)->fCost = Neighbours.at(i)->gCost + Neighbours.at(i)->hCost; 
-
-	}*/
-
-	//return Neighbours;
-
 }
 
 Node* Astar::findNode(int x, int y)
 {
 	
-
 	for (int i = 0; i < gridNodes.size(); i++)
 	{
-		//cout << " " << gridNodes.at(i)->gridX << " " << gridNodes.at(i)->gridY << endl;
 
 		if (gridNodes.at(i)->gridX == x && gridNodes.at(i)->gridY == y)
 		{
-			//cout << gridNodes.at(i)->gridX << "  " << gridNodes.at(i)->gridY << "  " << gridNodes.at(i)->isWalkable << "  " << gridNodes.size() << endl;
+			
 			return gridNodes.at(i);
 
 		}
 	
 	}
-
-	
 
 }
 

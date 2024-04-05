@@ -18,6 +18,8 @@ struct Node
 	int hCost = 0;
 	int fCost = 0;
 
+	float weight;
+
 	bool isStartNode = false;
 	bool isTargetNode = false;
 
@@ -36,10 +38,10 @@ public:
 	int fCost(Node* currentNode);
 	vector<Node*> GetNeighbours(Node* currentNode);
 
-	void RetractPath(Node* startNode, Node* endNode);
+	void RetracePath(Node* startNode, Node* endNode);
 	int GetDistance(Node* nodeA, Node* nodeB);
-	int isBrickAtTileCoord(int trackTileCol, int trackTileRow);
-	void drawTrack(Node* startNode);
+	int isBrickAtTileCoord(int gridTileCol, int gridTileRow);
+	void drawGrid(Node* startNode);
 
 	Color tileColor = GREEN;
 
@@ -47,15 +49,14 @@ public:
 
 	//Node* gridNodes[20][15];
 	vector<Node*> gridNodes;
-	vector<Node*> Neighbours;
 	vector<Node*> path;
 	
 	bool pathFound = true;
-	int TRACK_COLS = 15;
-	int TRACK_ROWS = 20;
+	int GRID_COLS = 15;
+	int GRID_ROWS = 20;
 
-	int TRACK_W = 40;
-	int TRACK_H = 40;
+	int GRID_W = 40;
+	int GRID_H = 40;
 	int BRICK_GAP = 1;
 
 private:

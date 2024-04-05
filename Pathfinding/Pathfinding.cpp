@@ -17,6 +17,9 @@ int main()
     Node* startNode = new Node;
     Node* targetNode = new Node;
 
+    Node* previousStartNode = new Node;
+    Node* previousTargetNode = new Node;
+
    
 
     Vector2 startPos;
@@ -34,7 +37,7 @@ int main()
         BeginDrawing();
         ClearBackground(White);
 
-        path->drawTrack(startNode);
+        path->drawGrid(startNode);
        
 
         if (IsMouseButtonPressed(0))
@@ -42,11 +45,21 @@ int main()
             mouseY = GetMousePosition().x / 40;
             mouseX = GetMousePosition().y / 40;
 
+            previousStartNode = startNode;
+            previousStartNode->isStartNode = false;
+
+            previousTargetNode = targetNode;
+            previousTargetNode->isTargetNode = false;
+
             startNode = path->findNode(mouseX, mouseY);
 
-            startNode->isStartNode = true;
+            if(startNode->isWalkable == true)
+                startNode->isStartNode = true;
+            
 
             cout << startNode->gridX << " " << startNode->gridY << endl;
+
+            path->path.clear();
 
         }
         else if (IsMouseButtonPressed(1))
@@ -54,11 +67,18 @@ int main()
             mouseY = floor(GetMousePosition().x / 40);
             mouseX = floor(GetMousePosition().y / 40);
 
+            previousTargetNode = targetNode;
+            previousTargetNode->isTargetNode = false;
+
+            path->path.clear();
+
             targetNode = path->findNode(mouseX, mouseY);
 
-           targetNode->isTargetNode = true;
+            if (targetNode->isWalkable == true)
+                targetNode->isTargetNode = true;
 
-           path->pathFound = false;
+
+            path->pathFound = false;
 
             cout << targetNode->gridX << " " << targetNode->gridY << endl;
 
@@ -66,7 +86,7 @@ int main()
         EndDrawing();
        
 
-        if(path->pathFound == false)
+        if(path->pathFound == false && startNode->isWalkable == true && targetNode->isWalkable == true)
             path->FindPath(startNode, targetNode);
        
         
